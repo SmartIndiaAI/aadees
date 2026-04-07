@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: 'Outfit', sans-serif;
+    --color-primary: var(--color-primary-custom, #291030);
+    --color-secondary: var(--color-secondary-custom, #fcd777);
+    --color-accent: var(--color-accent-custom, #8e46a5);
+}
+
+/* Premium Light Theme Overrides */
+:root {
+    --bg-main: #ffffff;
+    --bg-soft: #f9fafb;
+    --bg-card: #ffffff;
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --border-soft: #f3f4f6;
+    --shadow-premium: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+}
+
+body {
+    background-color: var(--bg-soft);
+    color: var(--text-main);
+}
+
+/* Smooth Transitions */
+* {
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-duration: 300ms;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-soft);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #e5e7eb;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #d1d5db;
+}
+
+/* Alignment Utilities */
+.container-premium {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+    .container-premium {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+}
+
+/* Premium Utilities from Design Snippet */
+@utility gold-gradient {
+    background: linear-gradient(135deg, #fcd777, #e6c25c);
+}
+
+@utility shadow-premium {
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+}
+
+@utility shadow-hover {
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+}
+
+/* Glassmorphism for Light Theme */
+@utility glass-light {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Soft UI Button */
+.btn-premium {
+    @apply px-10 py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] shadow-xl hover:shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3;
+}
+
+.btn-gold {
+    @apply gold-gradient text-primary px-8 py-4 rounded-xl font-bold shadow-md hover:scale-105 transition-all active:scale-95;
+}
+
+.btn-outline {
+    @apply border-2 border-primary text-primary px-8 py-4 rounded-xl font-bold hover:bg-primary hover:text-white transition-all active:scale-95;
+}
+
+
+.shadow-premium {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-hover {
+    box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.15);
+}
+
+/* Advanced Glassmorphism */
+.glass-light {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+@utility glass-dark {
+    background: rgba(41, 16, 48, 0.8);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Soft UI Button */
+.btn-premium {
+    @apply px-10 py-6 rounded-[24px] font-black uppercase tracking-[0.3em] text-[10px] shadow-premium hover:shadow-hover transition-all active:scale-95 flex items-center justify-center gap-4 w-full md:w-auto relative overflow-hidden;
+}
+
+.btn-premium::after {
+    content: '';
+    @apply absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity duration-500;
+}
+
+.btn-gold {
+    @apply gold-gradient text-primary px-10 py-5 rounded-[20px] font-black uppercase tracking-widest shadow-xl hover:scale-105 transition-all active:scale-95 w-full md:w-auto;
+}
+
+.btn-outline {
+    @apply border-2 border-primary/20 text-primary px-10 py-5 rounded-[20px] font-black uppercase tracking-widest hover:bg-primary hover:text-white hover:border-primary transition-all active:scale-95 w-full md:w-auto;
+}
+
+/* Section Header Decoration */
+@utility header-decoration {
+    @apply inline-block h-px w-12 bg-primary/20 mb-4;
+}
