@@ -7,7 +7,7 @@
 
         <!-- Logo -->
         <a href="{{ route('home') }}" class="flex items-center space-x-4 group active:scale-95 transition-transform">
-            <img src="{{ asset('logo.jpeg') }}" class="h-10 w-auto rounded-lg shadow-xl shadow-primary/5 transition-all group-hover:scale-105 group-hover:shadow-2xl" alt="Aadees">
+            <img src="{{ $siteLogo }}" class="h-10 w-auto rounded-lg shadow-xl shadow-primary/5 transition-all group-hover:scale-105 group-hover:shadow-2xl" alt="{{ $siteName }}">
         </a>
 
         <!-- Premium Nav -->
@@ -75,7 +75,7 @@
         <div id="mobile-menu-backdrop" class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
         <div id="mobile-menu-content" class="absolute inset-y-0 left-0 w-80 bg-white shadow-2xl transition-transform duration-500 -translate-x-full flex flex-col">
             <div class="p-8 flex items-center justify-between border-b border-gray-50">
-                <img src="{{ asset('logo.jpeg') }}" class="h-8 w-auto rounded-lg" alt="Aadees">
+                <img src="{{ $siteLogo }}" class="h-8 w-auto rounded-lg" alt="{{ $siteName }}">
                 <button id="mobile-menu-close" class="p-2 text-gray-400 hover:text-primary transition-colors">
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>

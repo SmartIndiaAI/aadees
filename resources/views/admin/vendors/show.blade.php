@@ -33,6 +33,13 @@
                         <span class="font-black uppercase tracking-widest text-gray-300">Revenue Split</span>
                         <span class="font-black text-primary italic">{{ $vendor->commission_percentage }}% Admin Share</span>
                     </div>
+
+                    @if($vendor->razorpay_account_id)
+                        <div class="flex items-center justify-between text-xs pt-4 border-t border-gray-50">
+                            <span class="font-black uppercase tracking-widest text-gray-300">Account ID</span>
+                            <span class="font-black text-gray-900 uppercase tracking-widest">{{ $vendor->razorpay_account_id }}</span>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -55,6 +62,35 @@
                     </div>
                     <button type="submit" class="w-full bg-primary text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] hover:bg-white hover:text-primary transition-all shadow-lg italic">Authorize Protocol Update</button>
                 </form>
+
+                <div class="pt-10 border-t border-white/5 space-y-6">
+                    <h4 class="text-[9px] font-black uppercase tracking-[0.4em] text-gray-500 italic">Financial Integration</h4>
+                    
+                    @if(!$vendor->razorpay_account_id)
+                        <form action="{{ route('admin.vendors.create-razorpay', $vendor->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="group flex items-center justify-center gap-4 w-full h-16 bg-accent text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] shadow-xl hover:scale-105 active:scale-95 transition-all">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                                Create Razorpay Route
+                            </button>
+                        </form>
+                    @else
+                        @if($vendor->razorpay_onboarding_link && $vendor->razorpay_account_status !== 'active')
+                            <div class="p-6 bg-white/5 rounded-2xl border border-white/10 space-y-3">
+                                <p class="text-[8px] font-black uppercase tracking-widest text-gray-500">KYC Onboarding Protocol</p>
+                                <a href="{{ $vendor->razorpay_onboarding_link }}" target="_blank" class="block text-[9px] font-black text-accent hover:underline break-all uppercase tracking-widest leading-relaxed">
+                                    {{ $vendor->razorpay_onboarding_link }}
+                                </a>
+                                <p class="text-[7px] font-bold text-gray-600 uppercase tracking-widest">Share this link with artisans to complete their financial node setup.</p>
+                            </div>
+                        @else
+                            <div class="flex items-center gap-4 p-6 bg-emerald-500/5 rounded-2xl border border-emerald-500/10">
+                                <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-emerald-500">Neural Link Active</span>
+                            </div>
+                        @endif
+                    @endif
+                </div>
             </div>
         </div>
 

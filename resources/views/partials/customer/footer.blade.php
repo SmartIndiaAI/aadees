@@ -31,9 +31,11 @@
         <!-- Brand Column -->
         <div class="space-y-6">
             <div class="flex items-center gap-3">
-                <img src="{{ asset('logo.jpeg') }}" class="h-10 w-auto rounded-lg shadow-sm" alt="AADEES">
+                <img src="{{ $siteLogo }}" class="h-10 w-auto rounded-lg shadow-sm" alt="{{ $siteName }}">
             </div>
-            <p class="text-gray-400 font-medium leading-relaxed uppercase tracking-widest text-[10px]">Premium multi-vendor marketplace curated for quality, style, and performance. Crafted for the discerning collector.</p>
+            <p class="text-gray-400 font-medium leading-relaxed uppercase tracking-widest text-[10px]">
+                {{ \App\Models\Setting::getValue('site_description', 'Premium multi-vendor marketplace curated for quality, style, and performance.') }}
+            </p>
         </div>
 
         <!-- Quick Links -->
@@ -53,10 +55,10 @@
         <div>
             <h4 class="font-black text-primary mb-6 uppercase tracking-widest text-[11px]">Support</h4>
             <div class="flex flex-col gap-4 text-gray-500 font-bold uppercase tracking-widest text-[10px]">
-                <a href="#" class="hover:text-primary transition-colors">Help Center</a>
-                <a href="#" class="hover:text-primary transition-colors">Returns & Shipping</a>
-                <a href="#" class="hover:text-primary transition-colors">Terms of Service</a>
-                <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
+                <a href="{{ route('pages.show', 'about-us') }}" class="hover:text-primary transition-colors">About Us</a>
+                <a href="{{ route('pages.show', 'shipping-info') }}" class="hover:text-primary transition-colors">Returns & Shipping</a>
+                <a href="{{ route('pages.show', 'terms-of-service') }}" class="hover:text-primary transition-colors">Terms of Service</a>
+                <a href="{{ route('pages.show', 'privacy-policy') }}" class="hover:text-primary transition-colors">Privacy Policy</a>
             </div>
         </div>
 
@@ -64,17 +66,17 @@
         <div>
             <h4 class="font-black text-primary mb-6 uppercase tracking-widest text-[11px]">Follow Us</h4>
             <div class="flex flex-col gap-4 text-gray-500 font-bold uppercase tracking-widest text-[10px]">
-                <a href="#" class="hover:text-primary transition-colors">Instagram</a>
-                <a href="#" class="hover:text-primary transition-colors">Facebook</a>
-                <a href="#" class="hover:text-primary transition-colors">Twitter</a>
-                <a href="#" class="hover:text-primary transition-colors">Pinterest</a>
+                @if($socialLinks['instagram']) <a href="{{ $socialLinks['instagram'] }}" class="hover:text-primary transition-colors">Instagram</a> @endif
+                @if($socialLinks['facebook']) <a href="{{ $socialLinks['facebook'] }}" class="hover:text-primary transition-colors">Facebook</a> @endif
+                @if($socialLinks['twitter']) <a href="{{ $socialLinks['twitter'] }}" class="hover:text-primary transition-colors">Twitter</a> @endif
+                @if($socialLinks['pinterest']) <a href="{{ $socialLinks['pinterest'] }}" class="hover:text-primary transition-colors">Pinterest</a> @endif
             </div>
         </div>
     </div>
 
     <!-- Bottom Bar -->
     <div class="max-w-7xl mx-auto px-4 lg:px-8 mt-20 pt-8 border-t border-gray-50 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p class="text-[10px] font-black uppercase tracking-widest text-gray-300">© {{ date('Y') }} AADEES MARKETPLACE. OPTIMIZED FOR QUALITY.</p>
+        <p class="text-[10px] font-black uppercase tracking-widest text-gray-300">© {{ date('Y') }} {{ $siteName }} MARKETPLACE. OPTIMIZED FOR QUALITY.</p>
         <div class="flex gap-8 opacity-40 grayscale contrast-125">
             <span class="text-[9px] font-black tracking-[0.5em] text-gray-500">RAZORPAY SECURE</span>
             <span class="text-[9px] font-black tracking-[0.5em] text-gray-500">ISO CERTIFIED</span>

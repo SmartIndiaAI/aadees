@@ -69,6 +69,7 @@ foreach (['user', 'admin', 'vendor'] as $role) {
 Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::resource('vendors', App\Http\Controllers\Admin\VendorController::class);
+    Route::post('/vendors/{id}/create-razorpay', [App\Http\Controllers\Admin\VendorController::class, 'createRazorpayAccount'])->name('vendors.create-razorpay');
     Route::get('/products', [App\Http\Controllers\Admin\ProductController::class, 'index'])->name('products');
     Route::get('/products/{id}/edit', [App\Http\Controllers\Admin\ProductController::class, 'edit'])->name('products.edit');
     Route::put('/products/{id}', [App\Http\Controllers\Admin\ProductController::class, 'update'])->name('products.update');
@@ -93,3 +94,7 @@ Route::middleware('auth:vendor')->prefix('vendor')->name('vendor.')->group(funct
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Customer\DashboardController::class, 'index'])->name('dashboard');
 });
+
+// Essential Pages
+Route::get('/contact-us', [App\Http\Controllers\PageController::class, 'contact'])->name('contact');
+Route::get('/p/{slug}', [App\Http\Controllers\PageController::class, 'show'])->name('pages.show');

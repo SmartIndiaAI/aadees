@@ -17,10 +17,11 @@ class DashboardController extends Controller
 
         $stats = [
             'total_sales' => OrderItem::where('vendor_id', $vendorId)->get()->sum(function($i) { return $i->price * $i->quantity; }),
-            'paid_earnings' => Transfer::where('vendor_id', $vendorId)->where('status', 'success')->sum('amount'),
+            'paid_earnings' => Transfer::where('vendor_id', $vendorId)->whereIn('status', ['success', 'processed'])->sum('amount'),
             'pending_earnings' => Transfer::where('vendor_id', $vendorId)
-                ->whereIn('status', ['pending', 'pending_kyc', 'failed'])
+                ->whereIn('status', ['pending', 'pending_kyc'])
                 ->sum('amount'),
+            'failed_earnings' => Transfer::where('vendor_id', $vendorId)->where('status', 'failed')->sum('amount'),
             'total_orders' => OrderItem::where('vendor_id', $vendorId)->count(),
         ];
 
@@ -43,7 +44,7 @@ class DashboardController extends Controller
             ->paginate(15);
             
         $stats = [
-            'paid' => Transfer::where('vendor_id', $vendorId)->where('status', 'success')->sum('amount'),
+            'paid' => Transfer::where('vendor_id', $vendorId)->whereIn('status', ['success', 'processed'])->sum('amount'),
             'pending' => Transfer::where('vendor_id', $vendorId)->whereIn('status', ['pending', 'pending_kyc'])->sum('amount'),
             'failed' => Transfer::where('vendor_id', $vendorId)->where('status', 'failed')->sum('amount'),
         ];

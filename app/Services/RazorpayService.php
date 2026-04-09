@@ -53,16 +53,16 @@ class RazorpayService
     /**
      * Transfer split funds to one or more vendors.
      */
-    public function transferFunds($paymentId, $transfers)
+    public function transferFunds($paymentId, $targetAccountId, $amountInRupees, $notes = [])
     {
         if (!$this->api) return null;
 
         try {
             return $this->api->transfer->create([
-                'account' => $transfers['account'], // Vendor razorpay_account_id
-                'amount'  => $transfers['amount'],  // In Paise
+                'account' => $targetAccountId,
+                'amount'  => (int)round($amountInRupees * 100), // Convert to Paise
                 'currency' => 'INR',
-                'notes'   => $transfers['notes'] ?? [],
+                'notes'   => $notes,
                 'source'  => $paymentId,
             ]);
         } catch (Exception $e) {

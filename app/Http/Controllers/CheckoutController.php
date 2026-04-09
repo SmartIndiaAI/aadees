@@ -14,6 +14,12 @@ use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
+    protected $razorpay;
+
+    public function __construct(\App\Services\RazorpayService $razorpay)
+    {
+        $this->razorpay = $razorpay;
+    }
     /**
      * Display the checkout page.
      */
@@ -134,20 +140,37 @@ class CheckoutController extends Controller
         $order = Order::with('orderItems.vendor')->findOrFail($orderId);
 
         // Logic for splitting payments into Transfers (Only for paid orders)
-        if ($order->payment_status === 'paid') {
+        if ($order->payment_status === 'paid' && $order->razorpay_payment_id) {
             foreach($order->orderItems as $item) {
                 if($item->vendor->razorpay_account_id) {
-                    // Check if transfer already exists to avoid duplicates on refresh
                     $exists = Transfer::where('reference_id', 'TRF-' . $order->order_number . '-' . $item->vendor_id . '-' . $item->id)->exists();
                     if (!$exists) {
-                        Transfer::create([
-                            'order_id' => $order->id,
-                            'vendor_id' => $item->vendor_id,
-                            'amount' => $item->vendor_share,
-                            'status' => 'pending_kyc',
-                            'transfer_id' => 'trf_simulated_' . Str::random(10),
-                            'reference_id' => 'TRF-' . $order->order_number . '-' . $item->vendor_id . '-' . $item->id,
-                        ]);
+                        try {
+                            $transfer = $this->razorpay->transferFunds(
+                                $order->razorpay_payment_id,
+                                $item->vendor->razorpay_account_id,
+                                $item->vendor_share,
+                                ['order_number' => $order->order_number, 'item_id' => $item->id]
+                            );
+
+                            Transfer::create([
+                                'order_id' => $order->id,
+                                'vendor_id' => $item->vendor_id,
+                                'amount' => $item->vendor_share,
+                                'status' => 'processed',
+                                'transfer_id' => $transfer->id,
+                                'reference_id' => 'TRF-' . $order->order_number . '-' . $item->vendor_id . '-' . $item->id,
+                            ]);
+                        } catch (\Exception $e) {
+                            Transfer::create([
+                                'order_id' => $order->id,
+                                'vendor_id' => $item->vendor_id,
+                                'amount' => $item->vendor_share,
+                                'status' => 'failed',
+                                'failure_reason' => $e->getMessage(),
+                                'reference_id' => 'TRF-' . $order->order_number . '-' . $item->vendor_id . '-' . $item->id,
+                            ]);
+                        }
                     }
                 }
             }

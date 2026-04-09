@@ -19,7 +19,7 @@ class DashboardController extends Controller
             'admin_commission' => OrderItem::whereHas('order', function($q) {
                 $q->where('payment_status', 'paid');
             })->sum('admin_share'),
-            'vendor_payouts' => Transfer::where('status', 'success')->sum('amount'),
+            'vendor_payouts' => Transfer::whereIn('status', ['success', 'processed'])->sum('amount'),
             'pending_payouts' => Transfer::whereIn('status', ['pending', 'pending_kyc', 'failed'])->sum('amount'),
             'active_vendors' => Vendor::where('razorpay_account_status', 'active')->count(),
             'pending_vendors' => Vendor::where('razorpay_account_status', '!=', 'active')->count(),
@@ -38,7 +38,15 @@ class DashboardController extends Controller
 
     public function settings()
     {
-        $settings = \App\Models\Setting::all();
+        $settings = \App\Models\Setting::all()->groupBy(function($item) {
+            if (str_starts_with($item->key, 'theme_')) return 'Theme';
+            if (str_starts_with($item->key, 'site_')) return 'Branding';
+            if (str_starts_with($item->key, 'contact_')) return 'Contact';
+            if (str_starts_with($item->key, 'social_')) return 'Social';
+            if (str_ends_with($item->key, '_content')) return 'Legal & Pages';
+            return 'Others';
+        });
+        
         return view('admin.settings', compact('settings'));
     }
 
@@ -46,11 +54,18 @@ class DashboardController extends Controller
     {
         $request->validate([
             'key' => 'required|string|exists:settings,key',
-            'value' => 'nullable|string',
+            'value' => 'nullable',
         ]);
 
-        \App\Models\Setting::where('key', $request->key)->update(['value' => $request->value]);
+        $setting = \App\Models\Setting::where('key', $request->key)->first();
 
-        return back()->with('status', 'System parameter gracefully synchronized.');
+        if ($request->key === 'site_logo' && $request->hasFile('value')) {
+            $path = $request->file('value')->store('settings', 'public');
+            $setting->update(['value' => $path]);
+        } else {
+            $setting->update(['value' => $request->value]);
+        }
+
+        return back()->with('status', 'Platform variable synchronized successfully.');
     }
 }

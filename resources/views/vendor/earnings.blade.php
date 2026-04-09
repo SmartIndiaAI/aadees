@@ -57,11 +57,14 @@
                             </td>
                             <td class="px-8 py-6">
                                 <span class="px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest 
-                                    @if($trf->status === 'success') bg-green-50 text-green-600
-                                    @elseif($trf->status === 'failed') bg-red-50 text-red-600
+                                    @if($trf->status === 'success' || $trf->status === 'processed') bg-green-50 text-green-600
+                                    @elseif($trf->status === 'failed') bg-rose-50 text-rose-600
                                     @else bg-orange-50 text-orange-600 @endif border border-current opacity-80">
                                     {{ str_replace('_', ' ', strtoupper($trf->status)) }}
                                 </span>
+                                @if($trf->status === 'failed' && $trf->failure_reason)
+                                    <p class="mt-2 text-[8px] font-bold text-rose-400 uppercase tracking-widest">{{ $trf->failure_reason }}</p>
+                                @endif
                             </td>
                             <td class="px-8 py-6 text-right font-black text-[10px] text-gray-400 uppercase tracking-widest">
                                 {{ $trf->created_at->format('d M Y') }}
